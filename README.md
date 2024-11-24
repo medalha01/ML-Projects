@@ -43,6 +43,13 @@ jupyter notebook notebooks/
 - **Classificação Binária:** Classificação de duas classes utilizando Sigmoid e ReLU.
 - **Classificação Multiclasse:** Classificação de três ou mais classes utilizando Softmax.
 
+
+# Referências de Dataset:
+- **Regressão:** url
+- **Classificação Binária:** https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data
+- **Classificação Multiclasse:** url
+
+
 ## Autores
 - Nome do Aluno 1
 - Nome do Aluno 2
