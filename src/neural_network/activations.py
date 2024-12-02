@@ -6,6 +6,7 @@ from typing import Callable, Dict
 # Registro para funções de ativação
 activation_registry: Dict[str, Dict[str, Callable]] = {}
 
+
 def register_activation(name: str, func: Callable, derivative: Callable) -> None:
     """
     Registra uma função de ativação e sua derivada.
@@ -21,10 +22,8 @@ def register_activation(name: str, func: Callable, derivative: Callable) -> None
     name = name.lower()
     if name in activation_registry:
         raise ValueError(f"A função de ativação '{name}' já está registrada.")
-    activation_registry[name] = {
-        'function': func,
-        'derivative': derivative
-    }
+    activation_registry[name] = {"function": func, "derivative": derivative}
+
 
 def get_activation(name: str) -> Dict[str, Callable]:
     """
@@ -44,6 +43,7 @@ def get_activation(name: str) -> Dict[str, Callable]:
         raise ValueError(f"A função de ativação '{name}' não está registrada.")
     return activation
 
+
 # Funções de ativação e suas derivadas
 def relu(z: np.ndarray) -> np.ndarray:
     """
@@ -57,6 +57,7 @@ def relu(z: np.ndarray) -> np.ndarray:
     """
     return np.maximum(0, z)
 
+
 def relu_derivative(z: np.ndarray) -> np.ndarray:
     """
     Derivada da função de ativação ReLU.
@@ -69,6 +70,7 @@ def relu_derivative(z: np.ndarray) -> np.ndarray:
     """
     return (z > 0).astype(float)
 
+
 def sigmoid(z: np.ndarray) -> np.ndarray:
     """
     Função de ativação Sigmoid.
@@ -80,6 +82,7 @@ def sigmoid(z: np.ndarray) -> np.ndarray:
         np.ndarray: Saída após aplicar Sigmoid.
     """
     return 1 / (1 + np.exp(-z))
+
 
 def sigmoid_derivative(z: np.ndarray) -> np.ndarray:
     """
@@ -94,6 +97,7 @@ def sigmoid_derivative(z: np.ndarray) -> np.ndarray:
     s = sigmoid(z)
     return s * (1 - s)
 
+
 def tanh(z: np.ndarray) -> np.ndarray:
     """
     Função de ativação Tanh.
@@ -105,6 +109,7 @@ def tanh(z: np.ndarray) -> np.ndarray:
         np.ndarray: Saída após aplicar Tanh.
     """
     return np.tanh(z)
+
 
 def tanh_derivative(z: np.ndarray) -> np.ndarray:
     """
@@ -118,6 +123,7 @@ def tanh_derivative(z: np.ndarray) -> np.ndarray:
     """
     return 1 - np.tanh(z) ** 2
 
+
 def leaky_relu(z: np.ndarray, alpha: float = 0.01) -> np.ndarray:
     """
     Função de ativação Leaky ReLU.
@@ -130,6 +136,7 @@ def leaky_relu(z: np.ndarray, alpha: float = 0.01) -> np.ndarray:
         np.ndarray: Saída após aplicar Leaky ReLU.
     """
     return np.where(z > 0, z, alpha * z)
+
 
 def leaky_relu_derivative(z: np.ndarray, alpha: float = 0.01) -> np.ndarray:
     """
@@ -146,6 +153,7 @@ def leaky_relu_derivative(z: np.ndarray, alpha: float = 0.01) -> np.ndarray:
     dz[z < 0] = alpha
     return dz
 
+
 def softmax(z: np.ndarray) -> np.ndarray:
     """
     Função de ativação Softmax.
@@ -158,6 +166,7 @@ def softmax(z: np.ndarray) -> np.ndarray:
     """
     exp_z = np.exp(z - np.max(z, axis=-1, keepdims=True))  # Para estabilidade numérica
     return exp_z / np.sum(exp_z, axis=-1, keepdims=True)
+
 
 def softmax_derivative(z: np.ndarray) -> np.ndarray:
     """
@@ -172,6 +181,7 @@ def softmax_derivative(z: np.ndarray) -> np.ndarray:
     s = softmax(z)
     return s * (1 - s)
 
+
 def linear(z: np.ndarray) -> np.ndarray:
     """
     Função de ativação Linear (identidade).
@@ -183,6 +193,7 @@ def linear(z: np.ndarray) -> np.ndarray:
         np.ndarray: Saída idêntica à entrada.
     """
     return z
+
 
 def linear_derivative(z: np.ndarray) -> np.ndarray:
     """
@@ -196,6 +207,7 @@ def linear_derivative(z: np.ndarray) -> np.ndarray:
     """
     return np.ones_like(z)
 
+
 def elu(z: np.ndarray, alpha: float = 1.0) -> np.ndarray:
     """
     Função de ativação ELU (Exponential Linear Unit).
@@ -208,6 +220,7 @@ def elu(z: np.ndarray, alpha: float = 1.0) -> np.ndarray:
         np.ndarray: Saída após aplicar ELU.
     """
     return np.where(z > 0, z, alpha * (np.exp(z) - 1))
+
 
 def elu_derivative(z: np.ndarray, alpha: float = 1.0) -> np.ndarray:
     """
@@ -223,19 +236,20 @@ def elu_derivative(z: np.ndarray, alpha: float = 1.0) -> np.ndarray:
     dz = np.where(z > 0, 1, alpha * np.exp(z))
     return dz
 
+
 # Registra as funções de ativação
 def initialize_activation_registry() -> None:
     """
     Inicializa e registra todas as funções de ativação disponíveis.
     """
-    register_activation('relu', relu, relu_derivative)
-    register_activation('sigmoid', sigmoid, sigmoid_derivative)
-    register_activation('tanh', tanh, tanh_derivative)
-    register_activation('leaky_relu', leaky_relu, leaky_relu_derivative)
-    register_activation('softmax', softmax, softmax_derivative)
-    register_activation('linear', linear, linear_derivative)
-    register_activation('elu', elu, elu_derivative)
+    register_activation("relu", relu, relu_derivative)
+    register_activation("sigmoid", sigmoid, sigmoid_derivative)
+    register_activation("tanh", tanh, tanh_derivative)
+    register_activation("leaky_relu", leaky_relu, leaky_relu_derivative)
+    register_activation("softmax", softmax, softmax_derivative)
+    register_activation("linear", linear, linear_derivative)
+    register_activation("elu", elu, elu_derivative)
+
 
 # Inicializa o registro ao importar o módulo
 initialize_activation_registry()
-
