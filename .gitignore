@@ -1,2 +1,3 @@
 .vscode/
 src/neural_network/__pycache__/
+src/neural_network/layers/__pycache__/

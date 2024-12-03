@@ -21,6 +21,8 @@ from .utils import (
     initialize_weights,
     orthogonal_init,
     normalize_data,
+    plot_learning_curve_with_accuracy,
+    plot_confusion_matrix
 )
 from .layers import (
     DenseLayer,
