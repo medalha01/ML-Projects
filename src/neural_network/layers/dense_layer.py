@@ -1,10 +1,20 @@
-from neural_network.layers.abstract_layer import Layer
-from neural_network.utils import initialize_weights
+from typing import Optional, Dict
+from .abstract_layer import Layer
+from ..utils import initialize_weights
+from ..activations import get_activation
 import numpy as np
-from typing import Dict
+
 
 class DenseLayer(Layer):
-    def __init__(self, input_size: int, output_size: int, initialization: str = "he", name: str = "Dense"):
+
+    def __init__(
+        self,
+        input_size: int,
+        output_size: int,
+        activation: Optional[str] = None,
+        initialization: str = "he",
+        name: Optional[str] = None,
+    ):
         """
         Inicializa uma camada densa genérica.
 
@@ -15,12 +25,27 @@ class DenseLayer(Layer):
             name (str): Nome da camada.
         """
         super().__init__(name)
-        self.input_shape = (input_size,)
-        self.output_shape = (output_size,)
+        self.input_size = input_size
+        self.output_size = output_size
 
-        # Inicializar pesos e vieses usando utils.py
-        self.weights = initialize_weights(input_size, output_size, method=initialization)
-        self.biases = np.zeros((1, output_size))  # Biases inicializados como 0
+        self.weights = initialize_weights(
+            input_size, output_size, method=initialization
+        )
+        self.biases = np.zeros((1, output_size))
+
+        if activation:
+            activation_funcs = get_activation(activation)
+            self.activation_func = activation_funcs["function"]
+            self.activation_derivative = activation_funcs["derivative"]
+        else:
+            self.activation_func = lambda x: x
+            self.activation_derivative = lambda x: np.ones_like(x)
+
+        self.input_data: Optional[np.ndarray] = None
+        self.linear_output: Optional[np.ndarray] = None
+
+        self.grad_weights: Optional[np.ndarray] = None
+        self.grad_biases: Optional[np.ndarray] = None
 
     def forward(self, input_data: np.ndarray) -> np.ndarray:
         """
@@ -32,9 +57,9 @@ class DenseLayer(Layer):
         Returns:
             np.ndarray: Saída da camada antes da ativação (shape: [batch_size, output_size]).
         """
-        self.input_data = input_data  # Armazena entrada para o backward
-        self.z = np.dot(input_data, self.weights) + self.biases  # Soma ponderada
-        return self.z  # Saída sem ativação
+        self.input_data = input_data
+        self.linear_output = np.dot(input_data, self.weights) + self.biases
+        return self.activation_func(self.linear_output)
 
     def backward(self, grad_output: np.ndarray) -> np.ndarray:
         """
@@ -46,12 +71,12 @@ class DenseLayer(Layer):
         Returns:
             np.ndarray: Gradiente para a camada anterior (shape: [batch_size, input_size]).
         """
-        # Gradiente dos pesos, vieses e entrada
-        self.grad_weights = np.dot(self.input_data.T, grad_output)
-        self.grad_biases = np.sum(grad_output, axis=0, keepdims=True)
-        grad_input = np.dot(grad_output, self.weights.T)
+        activation_grad = self.activation_derivative(self.linear_output)
+        delta = grad_output * activation_grad
 
-        return grad_input
+        self.grad_weights = np.dot(self.input_data.T, delta)
+        self.grad_biases = np.sum(delta, axis=0, keepdims=True)
+        return np.dot(delta, self.weights.T)
 
     def get_gradients(self) -> Dict[str, np.ndarray]:
         """
@@ -62,17 +87,15 @@ class DenseLayer(Layer):
         """
         return {"weights": self.grad_weights, "biases": self.grad_biases}
 
-    def apply_gradients(self, grad_weights: np.ndarray, grad_biases: np.ndarray, learning_rate: float):
+    def apply_gradients(self, learning_rate: float):
         """
         Aplica gradientes para atualizar pesos e vieses.
 
         Args:
-            grad_weights (np.ndarray): Gradientes dos pesos.
-            grad_biases (np.ndarray): Gradientes dos vieses.
             learning_rate (float): Taxa de aprendizado.
         """
-        self.weights -= learning_rate * grad_weights
-        self.biases -= learning_rate * grad_biases
+        self.weights -= learning_rate * self.grad_weights
+        self.biases -= learning_rate * self.grad_biases
 
     def get_parameters(self) -> Dict[str, np.ndarray]:
         """
