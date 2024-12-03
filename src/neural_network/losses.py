@@ -55,3 +55,24 @@ class HingeLoss(Loss):
     def backward(self, y_true: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
         grad = np.where(y_true * y_pred < 1, -y_true, 0)
         return grad / y_true.size
+    
+class CategoricalCrossEntropyLoss:
+    """
+    Implementação da Categorical Cross-Entropy Loss.
+    """
+    
+    def calculate(self, y_true: np.ndarray, y_pred: np.ndarray) -> float:
+        # Evita log(0) usando um pequeno epsilon
+        epsilon = 1e-15
+        y_pred = np.clip(y_pred, epsilon, 1 - epsilon)
+        
+        loss = -np.sum(y_true * np.log(y_pred), axis=1)
+        return np.mean(loss)
+
+    def backward(self, y_true: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
+        # Evita divisões por zero
+        epsilon = 1e-15
+        y_pred = np.clip(y_pred, epsilon, 1 - epsilon)
+        
+        grad = -y_true / y_pred
+        return grad / y_true.shape[0]
