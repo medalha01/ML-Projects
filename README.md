@@ -47,10 +47,10 @@ jupyter notebook notebooks/
 ## Referências de Dataset:
 - **Regressão:** url
 - **Classificação Binária:** https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data
-- **Classificação Multiclasse:** url
+- **Classificação Multiclasse:** https://www.kaggle.com/datasets/rabieelkharoua/predict-online-gaming-behavior-dataset
 
 
 ## Autores
-- Nome do Aluno 1
-- Nome do Aluno 2
-- Nome do Aluno 3
+- Acauã Pitta
+- Isac
+- Lucas Cunha
