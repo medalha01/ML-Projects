@@ -1,9 +1,7 @@
-# neural_network/layers/dense_layer.py
-
 from neural_network.layers.abstract_layer import Layer
+from neural_network.utils import initialize_weights
 import numpy as np
 from typing import Dict
-
 
 class DenseLayer(Layer):
     def __init__(self, input_size: int, output_size: int, initialization: str = "he", name: str = "Dense"):
@@ -20,30 +18,9 @@ class DenseLayer(Layer):
         self.input_shape = (input_size,)
         self.output_shape = (output_size,)
 
-        # Inicializar pesos e vieses
-        self.weights = self.initialize_weights(input_size, output_size, initialization)
+        # Inicializar pesos e vieses usando utils.py
+        self.weights = initialize_weights(input_size, output_size, method=initialization)
         self.biases = np.zeros((1, output_size))  # Biases inicializados como 0
-
-    def initialize_weights(self, input_size: int, output_size: int, method: str) -> np.ndarray:
-        """
-        Inicializa os pesos da camada com base no método especificado.
-
-        Args:
-            input_size (int): Número de entradas.
-            output_size (int): Número de saídas.
-            method (str): Método de inicialização ('he', 'xavier', ou 'random').
-
-        Returns:
-            np.ndarray: Matriz de pesos inicializada.
-        """
-        if method == "he":
-            return np.random.randn(input_size, output_size) * np.sqrt(2 / input_size)
-        elif method == "xavier":
-            return np.random.randn(input_size, output_size) * np.sqrt(1 / input_size)
-        elif method == "random":
-            return np.random.uniform(-1, 1, (input_size, output_size))
-        else:
-            raise ValueError(f"Método de inicialização '{method}' não é suportado.")
 
     def forward(self, input_data: np.ndarray) -> np.ndarray:
         """
