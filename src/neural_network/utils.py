@@ -3,10 +3,28 @@
 import numpy as np
 
 
-def initialize_weights(input_size: int, output_size: int) -> np.ndarray:
-    ##xavier
-    limit = np.sqrt(6 / (input_size + output_size))
-    return np.random.uniform(-limit, limit, (input_size, output_size))
+import numpy as np
+
+def initialize_weights(input_size: int, output_size: int, method: str = "he") -> np.ndarray:
+    """
+    Inicializa os pesos com base no método especificado.
+
+    Args:
+        input_size (int): Número de entradas.
+        output_size (int): Número de saídas.
+        method (str): Método de inicialização ('he', 'xavier', ou 'random').
+
+    Returns:
+        np.ndarray: Matriz de pesos inicializada.
+    """
+    if method == "he":
+        return np.random.randn(input_size, output_size) * np.sqrt(2 / input_size)
+    elif method == "xavier":
+        return np.random.randn(input_size, output_size) * np.sqrt(1 / input_size)
+    elif method == "random":
+        return np.random.uniform(-1, 1, (input_size, output_size))
+    else:
+        raise ValueError(f"Método de inicialização '{method}' não é suportado.")
 
 
 def orthogonal_init(input_size: int, output_size: int) -> np.ndarray:
