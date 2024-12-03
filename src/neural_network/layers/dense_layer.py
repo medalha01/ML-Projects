@@ -55,7 +55,7 @@ class DenseLayer(Layer):
             input_data (np.ndarray): Dados de entrada (shape: [batch_size, input_size]).
 
         Returns:
-            np.ndarray: Saída da camada antes da ativação (shape: [batch_size, output_size]).
+            np.ndarray: Saída da camada após a ativação (shape: [batch_size, output_size]).
         """
         self.input_data = input_data
         self.linear_output = np.dot(input_data, self.weights) + self.biases
@@ -86,16 +86,6 @@ class DenseLayer(Layer):
             dict: Gradientes dos pesos e vieses.
         """
         return {"weights": self.grad_weights, "biases": self.grad_biases}
-
-    def apply_gradients(self, learning_rate: float):
-        """
-        Aplica gradientes para atualizar pesos e vieses.
-
-        Args:
-            learning_rate (float): Taxa de aprendizado.
-        """
-        self.weights -= learning_rate * self.grad_weights
-        self.biases -= learning_rate * self.grad_biases
 
     def get_parameters(self) -> Dict[str, np.ndarray]:
         """
