@@ -19,7 +19,7 @@ class DropoutLayer(Layer):
     def forward(self, input_data: np.ndarray) -> np.ndarray:
 
         if self.training:
-            rng = np.random.default_rng("372")
+            rng = np.random.default_rng(372)
             self.mask = rng.binomial(1, 1 - self.rate, size=input_data.shape)
             output = input_data * self.mask
         else:
