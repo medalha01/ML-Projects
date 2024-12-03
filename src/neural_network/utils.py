@@ -49,3 +49,21 @@ def min_max_scale(x: np.ndarray, feature_range: tuple = (0, 1)) -> np.ndarray:
     x_min = x.min(axis=0)
     x_max = x.max(axis=0)
     return (x - x_min) / (x_max - x_min + 1e-12) * (max_val - min_val) + min_val
+
+def one_hot_encode(labels: np.ndarray, num_classes: int) -> np.ndarray:
+    """
+    Realiza o one-hot encoding em um array de rótulos categóricos.
+
+    """
+
+    # Verifica se os rótulos estão no formato correto (inteiros de 0 a num_classes-1)
+    if not np.issubdtype(labels.dtype, np.integer):
+        raise ValueError("Os rótulos devem ser inteiros para o one-hot encoding.")
+
+    # Cria a matriz de zeros
+    one_hot_matrix = np.zeros((labels.size, num_classes))
+
+    # Atribui 1 na posição correspondente ao rótulo
+    one_hot_matrix[np.arange(labels.size), labels] = 1
+
+    return one_hot_matrix
