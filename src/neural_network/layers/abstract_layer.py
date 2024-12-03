@@ -1,4 +1,4 @@
-# neural_network/layers/base.py
+# neural_network/layers/abstract_layer.py
 
 from abc import ABC, abstractmethod
 import numpy as np
