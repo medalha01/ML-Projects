@@ -56,23 +56,31 @@ class HingeLoss(Loss):
         grad = np.where(y_true * y_pred < 1, -y_true, 0)
         return grad / y_true.size
     
-class CategoricalCrossEntropyLoss:
+class CategoricalCrossEntropyLoss(Loss):
     """
     Implementação da Categorical Cross-Entropy Loss.
+    Usada para problemas de classificação multiclasse com softmax.
     """
     
     def calculate(self, y_true: np.ndarray, y_pred: np.ndarray) -> float:
-        # Evita log(0) usando um pequeno epsilon
+        """
+        Calcula a perda entre os valores reais e preditos.
+        
+        Args:
+            y_true: One-hot encoded ground truth labels
+            y_pred: Predicted probabilities (após softmax)
+        """
         epsilon = 1e-15
         y_pred = np.clip(y_pred, epsilon, 1 - epsilon)
-        
-        loss = -np.sum(y_true * np.log(y_pred), axis=1)
-        return np.mean(loss)
+        return -np.mean(np.sum(y_true * np.log(y_pred), axis=1))
 
     def backward(self, y_true: np.ndarray, y_pred: np.ndarray) -> np.ndarray:
-        # Evita divisões por zero
-        epsilon = 1e-15
-        y_pred = np.clip(y_pred, epsilon, 1 - epsilon)
+        """
+        Calcula o gradiente da perda.
+        Quando usado com softmax, simplifica para (y_pred - y_true).
         
-        grad = -y_true / y_pred
-        return grad / y_true.shape[0]
+        Args:
+            y_true: One-hot encoded ground truth labels
+            y_pred: Predicted probabilities (após softmax)
+        """
+        return (y_pred - y_true) / y_true.shape[0]
