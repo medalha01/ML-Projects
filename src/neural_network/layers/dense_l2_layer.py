@@ -19,6 +19,7 @@ class L2DenseLayer(Layer):
         output_size: int,
         activation: str = "relu",
         regularization_lambda: float = 0.01,
+        initialization: str = "he",
         name: Optional[str] = None,
     ):
 
@@ -27,7 +28,11 @@ class L2DenseLayer(Layer):
         self.output_size = output_size
         self.regularization_lambda = regularization_lambda
 
-        self.weights = initialize_weights(self.input_size, self.output_size)
+        self.weights = initialize_weights(
+            self.input_size, 
+            self.output_size,
+            method=initialization
+        )
         self.biases = np.zeros((1, self.output_size))
 
         activation_funcs = get_activation(activation)
@@ -63,6 +68,15 @@ class L2DenseLayer(Layer):
         self.grad_biases = grad_biases
 
         return input_grad
+
+    def get_gradients(self) -> Dict[str, np.ndarray]:
+        """
+        Retorna os gradientes calculados para os pesos e vieses.
+
+        Returns:
+            dict: Gradientes dos pesos e vieses.
+        """
+        return {"weights": self.grad_weights, "biases": self.grad_biases}
 
     def get_parameters(self) -> Dict[str, np.ndarray]:
         return {"weights": self.weights, "biases": self.biases}
