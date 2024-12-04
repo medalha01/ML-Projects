@@ -22,7 +22,7 @@ from .utils import (
     orthogonal_init,
     normalize_data,
     plot_loss_and_accuracy_curve,
-    plot_confusion_matrix
+    plot_confusion_matrix,
 )
 from .layers import (
     DenseLayer,
@@ -30,3 +30,5 @@ from .layers import (
     DropoutLayer,
     Layer,
 )
+
+from .neural import NeuralNetwork
