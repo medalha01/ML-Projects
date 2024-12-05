@@ -25,6 +25,7 @@ from .utils import (
     plot_single_confusion_matrix,
     plot_confusion_matrices_side_by_side,
     display_final_metrics,
+    print_metrics_legend,
 )
 from .layers import (
     DenseLayer,
