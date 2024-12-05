@@ -22,7 +22,9 @@ from .utils import (
     orthogonal_init,
     normalize_data,
     plot_loss_and_accuracy_curve,
-    plot_confusion_matrix,
+    plot_single_confusion_matrix,
+    plot_confusion_matrices_side_by_side,
+    display_final_metrics,
 )
 from .layers import (
     DenseLayer,
