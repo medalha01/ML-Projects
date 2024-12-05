@@ -14,6 +14,7 @@ Este projeto implementa uma Rede Neural Artificial (RNA) do zero em Python, util
   - matplotlib
   - scikit-learn
   - pandas
+  - seaborn
 
 ## Estrutura
 - `src/`: Código-fonte da implementação.
@@ -25,7 +26,7 @@ Este projeto implementa uma Rede Neural Artificial (RNA) do zero em Python, util
 1. Clone o repositório:
 
 ``
-git clone projeto
+git clone machine-learning
 ``
 
 2. Instale as dependências:
@@ -52,5 +53,5 @@ jupyter notebook notebooks/
 
 ## Autores
 - Acauã Pitta
-- Isac
+- Isac Martins
 - Lucas Cunha
