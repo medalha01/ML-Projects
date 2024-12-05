@@ -20,7 +20,7 @@ def initialize_weights(
     Returns:
         np.ndarray: Matriz de pesos inicializada.
     """
-    rng = np.random.default_rng(8989898989)
+    rng = np.random.default_rng(100)
     if method == "he":
         return rng.standard_normal((input_size, output_size)) * np.sqrt(2 / input_size)
     elif method == "xavier":
@@ -33,7 +33,7 @@ def initialize_weights(
 
 def orthogonal_init(input_size: int, output_size: int) -> np.ndarray:
 
-    rng = np.random.default_rng(8989898989)
+    rng = np.random.default_rng(100)
     a = rng.standard_normal((input_size, output_size))
     u, _, v = np.linalg.svd(a, full_matrices=False)
     return u if u.shape == (input_size, output_size) else v
